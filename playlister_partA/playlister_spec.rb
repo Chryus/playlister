@@ -1,3 +1,8 @@
+require 'awesome_print.rb'
+require './lib/artist.rb'
+require './lib/genre.rb'
+require './lib/song.rb'
+
 describe "playlister" do
   it 'Can initialize an Artist' do
     lambda {Artist.new}.should_not raise_error
@@ -34,7 +39,6 @@ describe "playlister" do
     artist = Artist.new
     songs = (1..4).collect{|i| Song.new}
     artist.songs = songs
-
     artist.songs.should eq(songs)
   end
 
@@ -42,7 +46,6 @@ describe "playlister" do
     artist = Artist.new
     songs = [Song.new, Song.new]
     artist.songs = songs
-
     artist.songs_count.should eq(2)
   end
 
@@ -54,17 +57,7 @@ describe "playlister" do
     artist.songs.should include(song)
   end
 
-  it 'artists have genres' do
-    artist = Artist.new
-    song = Song.new
-
-    song.genre = Genre.new.tap{|g| g.name = "rap"}
-    artist.add_song(song)
-
-    artist.genres.should include(song.genre)
-  end
-
-  # Genre Specs
+  #Genre Specs
   it 'Can initialize a genre' do
     lambda {Genre.new}.should_not raise_error
   end
@@ -74,6 +67,16 @@ describe "playlister" do
     genre.name = 'rap'
 
     genre.name.should eq('rap')
+  end
+
+  it 'artists have genres' do
+    artist = Artist.new
+    song = Song.new
+
+    song.genre = Genre.new.tap{|g| g.name = "rap"}
+    artist.add_song(song)
+
+    artist.genres.should include(song.genre)
   end
 
   it 'A genre has many songs' do
@@ -125,19 +128,28 @@ describe "playlister" do
   # Extra Credit
   # Complete any song test that is pending (undefined).
 
-  it 'Can initialize a song' do
+   it 'Can initialize a song' do
+      lambda {Song.new}.should_not raise_error
+   end
 
-  end
+   it 'A song can have a name' do
+    song = Song.new
+    song.name = "Son of a Gun"
+    song.name.should eq("Son of a Gun")
+   end
 
-  it 'A song can have a name' do
-
-  end
-
-  it 'A song can have a genre' do
-
+it 'A song can have a genre' do
+    song = Song.new
+    genre = Genre.new.tap{|g| g.name = 'rap'}
+    song.genre = genre
+    song.genre.should eq(genre)
   end
 
   it 'A song has an artist' do
+    song = Song.new
+    song.artist = "Prince"
+    song.artist.should eq('Prince')
 
   end
+
 end
