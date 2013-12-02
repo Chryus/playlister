@@ -8,7 +8,6 @@ require 'debugger'
 	
  	attr_accessor :mp3s, :artists, :songs, :genres
 
-#returns an array containing all the file names in a given directory, sans the current and parent directors (. & ..)
 	def initialize
 		@mp3s = all_songs
 		@artists = parse_artists
@@ -16,6 +15,7 @@ require 'debugger'
 		@genres = parse_genres
 	end
 
+#returns an array containing all the file names in a given directory, sans the current and parent directors (. & ..)
 	def all_songs
     Dir.entries('data').select {|f| !File.directory? f}
   end
@@ -31,9 +31,8 @@ require 'debugger'
 	def parse_genres
 		all_songs.collect { |item| item.split(" [")[1][0..-6] }
 	end
+
  end
-
-
 
  mas = Parser.new
  ap mas.genres
