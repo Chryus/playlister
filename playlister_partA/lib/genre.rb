@@ -28,9 +28,9 @@ class Genre
 		GENRES.collect {|genre| genre}
 	end
 
-	# def songs
- #    @songs ||= []
- #  end
+	def songs
+     @songs ||= []
+  end
 	
 end
 

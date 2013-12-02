@@ -4,6 +4,7 @@ require './lib/genre.rb'
 require './lib/song.rb'
 
 describe "playlister" do
+  
   it 'Can initialize an Artist' do
     lambda {Artist.new}.should_not raise_error
   end
@@ -53,7 +54,6 @@ describe "playlister" do
     artist = Artist.new
     song = Song.new
     artist.add_song(song)
-
     artist.songs.should include(song)
   end
 
