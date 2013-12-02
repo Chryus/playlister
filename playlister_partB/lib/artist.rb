@@ -46,6 +46,8 @@ class Artist
 
 end
 
+#ap ARTISTS
+
 # max = Artist.new
 # ap max.add_song("peaches")
 # ap Artist::ARTISTS.inspect
