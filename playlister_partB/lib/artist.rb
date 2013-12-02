@@ -1,5 +1,6 @@
 
 require 'awesome_print'
+
 #require '.genre.rb'
 
 class Artist
@@ -46,7 +47,7 @@ class Artist
 
 end
 
-#ap ARTISTS
+
 
 # max = Artist.new
 # ap max.add_song("peaches")

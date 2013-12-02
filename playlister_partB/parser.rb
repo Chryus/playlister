@@ -4,33 +4,40 @@ require './lib/song'
 require 'awesome_print'
 require 'debugger'
 
+ class Parser
+	
+ 	attr_accessor :mp3s, :artists, :songs, :genres
 
-mp3files = []
-artists = []
-genres = []
-songs = []
 #returns an array containing all the file names in a given directory, sans the current and parent directors (. & ..)
-	Dir.foreach('data') do |item|
-		next if item == '.' || item == '..'
-		mp3files << item
- 		artists << item.split(" - ")
- 		genres << item.split(" [")[1][0..-6]
- 		songs << item.split(" - ")[1].split("[")[0][0..-2]
-		end
-#ap mp3files
-#ap artists
-ap genres.uniq
-#ap songs
-
-def make_artists
-	artists.length do [i] 
-		Artist.new(name[i], songs[i])
+	def initialize
+		@mp3s = all_songs
+		@artists = parse_artists
+		@songs = parse_songs
+		@genres = parse_genres
 	end
-end
 
-def make_genres
- 	artists.length do [i] 
-		Artist.new(name[i], songs[i])
+	def all_songs
+    Dir.entries('data').select {|f| !File.directory? f}
+  end
+
+	def parse_artists
+		all_songs.collect {|item| item.split(" - ")}
+ 	end
+
+ 	def parse_songs
+ 		all_songs.collect { |item| item.split(" - ")[1].split("[")[0][0..-2]}
 	end
-end
+
+	def parse_genres
+		all_songs.collect { |item| item.split(" [")[1][0..-6] }
+	end
+ end
+
+
+
+ mas = Parser.new
+ ap mas.genres
+
+
+
 
