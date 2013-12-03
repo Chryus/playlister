@@ -7,12 +7,10 @@ class Artist
 
 	attr_accessor :name, :songs
 
-	ARTISTS = []
+	All = []
 	
 	def initialize
-		@name = name
-		@songs = []
-		ARTISTS << self
+		All << self
 	end
 
 	#take the instance object songs and call .length on it to determine
@@ -34,15 +32,15 @@ class Artist
 	end
 
 	def self.count
-		ARTISTS.length
+		All.size
 	end
 
 	def self.reset_artists
-		ARTISTS.clear
+		All.clear
 	end
 
 	def self.all 
-		ARTISTS
+		All
 	end
 
 end

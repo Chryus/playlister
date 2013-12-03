@@ -1,52 +1,109 @@
-require './lib/artist'
-require './lib/genre'
-require './lib/song'
 require 'awesome_print'
 require 'debugger'
+require './lib/artist'
+require './lib/song'
+require './lib/genre'
 
- # class Parser
-	
- # 	attr_accessor :mp3s, :artists, :songs, :genres
+class Parser 
+  
+  attr_reader :catalog, :artist_list
+  
+  def initialize
+    @catalog = parse_songs
+    @artist_list = create_artist_hash
+  end
 
-	# def initialize
-	# 	@mp3s = all_songs
-	# 	@artists = parse_artists
-	# 	@songs = parse_songs
-	# 	@genres = parse_genres
-	# end
+  def parse_songs
+    files = Dir.entries('data').select { |f| !File.directory? f}
+    artist = /((.*) (?=\-))/
+    song = /(?<=\-\s).*(?=\s\[)/
+    genre = /(?<=\[).*(?=\])/
+    catalog = []
+    files.each do |item|
+      song_array = []
+      a = item.match(artist).to_s.strip
+      s = item.match(song).to_s
+      g = item.match(genre).to_s
+      song_array << a << s << g
+      catalog << song_array
+    end
+    catalog
+  end
 
-#returns an array containing all the file names in a given directory, sans the current and parent directors (. & ..)
-	
-	files = Dir.entries('data').select {|f| !File.directory? f}
+#create hash with artist & number of songs.
+  def create_artist_hash
+    artist_songs = {}
+    catalog.collect do |file|
+      file[0]
+      if artist_songs[file[0]].nil? 
+        artist_songs[file[0]] = 1
+      else
+        artist_songs[file[0]] += 1
+      end
+    end
+    artist_songs
+  end
+
+#iterate over hash, printing artists alphabetically with song count.
+  def print_artists
+    artist_list.each do |artist, count|
+      if count < 2
+        puts "#{artist} - #{count} song"
+      else
+        puts "#{artist} - #{count} songs"
+      end
+    end  
+  end
+
+def print_artist_songs
+  puts "There are #{catalog.count} artists in the catalog. Select Artist."
+  artist_choice = gets.chomp.capitalize
+  artist_song = catalog.collect do |file|
+    if file[0] == artist_choice
+      file[1]
+    end
+  end
+  puts artist_song.compact!
+end
+  
+end
+
+
+
+
+# artist = /((.*) (?=\-))/
+# song = /(?<=\-\s).*(?=\s\[)/
+# genre = /(?<=\[).*(?=\])/
+
+# our_artist = files[0].match(artist)
+# our_song = files[0].match(song)
+# our_genre = files[0].match(genre)
+
+# parser = Parser.new
+# parser.catalog
+# parser.artist_list
+# parser.print_artists
+
+
+  #  files = Dir.entries('data').select { |f| !File.directory? f}
+  # ap parse_songs(files)
+#end
+
+
 
     #make an aray with 3 elements(artist, song, genre)
     #split by non 
     #see the opening brackets and grab everything before the closing brackets
-    artist = /((.*) (?=\-))/
-    song = /(?<=\-\s).*(?=\s\[)/
-    genre = /(?<=\[).*(?=\])/
-    #m = files[0].match(artist)
-    #z = files[0].match(song)
-    #x = files[0].match(genre)
-
-    def parse_files(files)
-    	artist = /((.*) (?=\-))/
-    	song = /(?<=\-\s).*(?=\s\[)/
-    	genre = /(?<=\[).*(?=\])/
-	    catalogue = []
-	    files.each do |item|
-	    	song_array = []
-	    	m = item.match(artist).to_s
-	    	z = item.match(song).to_s
-	    	x = item.match(genre).to_s
-	    	song_array << m << z << x
-	    	catalogue << song_array
-	    end
-	    catalogue
-	  end
-    ap parse_files(files)
+    # parse_files(files).each do |mp3|
+    # 	if artist.name == mp3[0] 
+    # 	Artist.new.name = mp3[0] 
+    # 	Song.new.name = mp3[1] 
+    # 	Genre.new.name = mp3[2]
+    # end
 
 
+
+    # ap Artist.all
 
 	# def parse_artists
 	# 	all_songs.collect {|item| item.split(" - ")}
