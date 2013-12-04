@@ -10,17 +10,24 @@ require 'debugger'
 ######1. Tripping Billies - Uncool Jam Bands  
 ######2. What Would You Say - Bands Blake Liked in 1996  
 parser = Parser.new
-parser.make_objects
+data = parser.grab_data('data')
+catalog = parser.parse_song_titles(data)
+parser.make_objects(catalog)
+# ([["bob", "song1", "genre1"],["bob", "song2", "genre2"]])
 
 def print_artists
   Artist.all.each do |artist|
-    #if artist.songs_count < 2
-      puts artist.name
-    #else
-      #puts "#{artist.name} - #{artist.songs_count} songs"
-    #end
+    check_artist_song_count(artist)
   end
   puts "There are #{Artist.count} artists in the catalog.\n"
+end
+
+def check_artist_song_count(artist)
+  if artist.songs_count < 2
+    puts "#{artist.name} - #{artist.songs_count} song"
+  else
+    puts "#{artist.name} - #{artist.songs_count} songs"
+  end
 end
 
 def print_artist_songs
@@ -29,8 +36,8 @@ def print_artist_songs
   num = 1
   Artist.all.each do |artist|
      if user_choice == artist.name
+      check_artist_song_count(artist)
       artist.songs.each do |song|
-        puts "#{artist.name} — #{artist.songs_count}(song)s"
         puts "#{num}.#{song.name}"
         num += 1
       end
@@ -38,37 +45,82 @@ def print_artist_songs
     end
   end
 
-def say_hello
-  puts "Hello. Would you like to browse by artist or genre?"
-  answer = gets.chomp.downcase 
-  if answer == "artist"
-    print_artists
-    print_artist_songs
-  elsif choice == "genre"
-    genre_catalog = []
-    #print list of all artists alphabetically with song count.
-    catalog.each do |file|
-      genre_catalog << file[2]
+def print_genres
+  Genre.all.each do |genre|
+    puts "#{genre.name}: #{genre.songs.size} Songs, #{genre.artists.size} Artists"
+  end
+  puts "There are #{Genre.all.size} genres in the catalog.\n"
+end
+
+def print_genre_songs
+  puts "\nSelect Genre.\n"
+  user_choice = gets.chomp.downcase
+  num = 1
+  Genre.all.each do |genre|
+     if user_choice == genre.name
+      genre.songs.each do |song|
+        puts "#{num}. #{song.artist.name} — #{song.name}"
+        num += 1
+      end
+     end
+    end
   end
 
-    #ap genre_catalog.uniq!
-    puts "There are #{genre_catalog.count} genres."
-    #print list of all genres sorted by the amount of songs
-    #the number of songs and number artists per genre should be included
-    #user select genre
-    #they should be taken to the individual genre "page"
-    #the genres page should list the name of the songs, linking to the individual song and artists 
-    #Also include the total unique artists and song counts in the genre
-    #a user should be able to type artist name M83 and be taken to M83's artist "page" 
-    #or type song name Midnight City and get taken to the songs "page"
-    #the song page should list all the available info on the song, it's artist and genre.
+def show_song_page
+  # debugger
+  puts "\nSelect Song.\n"
+  user_choice = gets.chomp.capitalize
+  song = nil
+  Genre.all.each do |genre|
+    break if song
+    song = find_song(user_choice, genre.songs)
+  end
+  if song.nil?
+    puts "Please try again"
   else
-    puts "Sorry I did not understand"
+    puts "\n#{song.name}'s artist is #{song.artist.name}" 
+    puts "#{song.name}'s genre is #{song.genre.name}"
   end
 end
 
+
+def find_song(song, array)
+  song_array = array.select do |song|
+    if song == song
+      song
+    end
+  end
+  song_array.first
+end
+
+def say_hello
+  puts "Hello. Would you like to browse by artist or genre? Type exit to quit"
+  answer = gets.chomp.downcase 
+  looping = true
+  while looping
+    if answer == "artist"
+      print_artists
+      print_artist_songs
+      break
+    elsif answer == "genre"
+      print_genres
+      print_genre_songs
+      show_song_page
+      break
+    elsif answer == "exit"
+      looping = false
+    else
+      puts "Sorry I did not understand"
+    end
+  end
+end
+
+
+
 say_hello
-ap Artist.all.inspect 
+#ap Artist.all.inspect 
+
+
 # The Genre interface for the CLI should prompt the user with "Select Genre"
 # The genre index must list all the genres. This list must be sorted by the amount of songs.
 # In addition to the Genres name, the total song and artist count should be listed along side it.

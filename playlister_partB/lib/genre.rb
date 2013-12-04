@@ -4,12 +4,11 @@ require "./lib/artist"
 
 class Genre
 
-	attr_accessor :name, :artists, :genre_songs
+	attr_accessor :name, :artists, :songs
 
 	GENRES = []
 
 	def initialize
-		@genre_songs = []
 		GENRES << self
 	end
 
@@ -19,8 +18,8 @@ class Genre
 		GENRES.clear
 	end
 
-	def collect_artists
-    genre_songs.collect{|song| song.artist}.uniq
+	def artists
+    songs.collect{|song| song.artist}.uniq
   end
 
 	def self.all 

@@ -12,7 +12,7 @@ class Song
   #this is the explicit writer method
   def genre=(genre)
     @genre = genre
-    genre.genre_songs << self
+    genre.songs << self
   end
 
 end
@@ -24,10 +24,4 @@ end
 # also, the genre that you add to the instance of the song class isn't just 
 #the name of the genre
 # it's the whole genre object, which includes an array of artists
-
-# [1,2].each do |song|
-# 	Song.new
-# end
-
-# ap Song::SONGS.inspect
 
