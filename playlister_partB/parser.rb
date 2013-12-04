@@ -6,15 +6,13 @@ require './lib/genre'
 
 class Parser 
   
-  attr_reader :catalog, :artist_list
-  
+  #attr_reader
+
   def initialize
-    @catalog = parse_songs
-    @artist_list = create_artist_hash
+ 
   end
 
-  def parse_songs
-    files = Dir.entries('data').select { |f| !File.directory? f}
+  def parse_song_titles(files)
     artist = /((.*) (?=\-))/
     song = /(?<=\-\s).*(?=\s\[)/
     genre = /(?<=\[).*(?=\])/
@@ -30,106 +28,72 @@ class Parser
     catalog
   end
 
-#create hash with artist & number of songs.
-  def create_artist_hash
-    artist_songs = {}
-    catalog.collect do |file|
-      file[0]
-      if artist_songs[file[0]].nil? 
-        artist_songs[file[0]] = 1
-      else
-        artist_songs[file[0]] += 1
-      end
-    end
-    artist_songs
+  def grab_data(location)
+    Dir.entries(location).select { |f| !File.directory? f}
   end
 
-#iterate over hash, printing artists alphabetically with song count.
-  def print_artists
-    artist_list.each do |artist, count|
-      if count < 2
-        puts "#{artist} - #{count} song"
-      else
-        puts "#{artist} - #{count} songs"
-      end
-    end  
-  end
-
-def print_artist_songs
-  puts "There are #{catalog.count} artists in the catalog. Select Artist."
-  artist_choice = gets.chomp.capitalize
-  artist_song = catalog.collect do |file|
-    if file[0] == artist_choice
-      file[1]
+  def make_objects
+    files = grab_data('data')
+    parse_song_titles(files).each do |file|
+      artist = make_artist(file)
+      song = make_song(file)
+      #artist.add_song(song)
+      #genre = make_genre(file)
+      #song.genre = genre
+      #genre.collect_artists
     end
   end
-  puts artist_song.compact!
+
+  def make_song(file)
+    song = Song.new
+    song.name = file[1]
+    song
+  end
+
+  #checks for duplicates
+  def make_genre(file)
+    name = file[2] #get the genre
+    if Genre.all.length == 0
+      new_genre = Genre.new
+      new_genre.name = name
+      return new_genre
+    else
+      Genre.all.each do |genre|
+        if genre.name == name
+          return genre
+        else
+          newer_genre = Genre.new
+          newer_genre.name = name
+          return newer_genre
+        end
+      end
+    end
+  end
+
+  #checks for duplicates
+  def make_artist(file)
+    name = file[0] #get the name
+    if Artist.all.length == 0
+      new_artist = Artist.new
+      new_artist.name = name
+      return new_artist
+    else
+      Artist.all.each do |artist| 
+        if artist.name == name #check if this name already exists
+          return artist
+        else
+          newer_artist = Artist.new
+          newer_artist.name = name
+          return newer_artist
+        end
+      end
+    end
+  end
+
 end
-  
-end
 
 
 
-
-# artist = /((.*) (?=\-))/
-# song = /(?<=\-\s).*(?=\s\[)/
-# genre = /(?<=\[).*(?=\])/
-
-# our_artist = files[0].match(artist)
-# our_song = files[0].match(song)
-# our_genre = files[0].match(genre)
-
-# parser = Parser.new
-# parser.catalog
-# parser.artist_list
-# parser.print_artists
-
-
-  #  files = Dir.entries('data').select { |f| !File.directory? f}
-  # ap parse_songs(files)
-#end
-
-
-
-    #make an aray with 3 elements(artist, song, genre)
-    #split by non 
-    #see the opening brackets and grab everything before the closing brackets
-    # parse_files(files).each do |mp3|
-    # 	if artist.name == mp3[0] 
-    # 	Artist.new.name = mp3[0] 
-    # 	Song.new.name = mp3[1] 
-    # 	Genre.new.name = mp3[2]
-    # end
-
-
-
-    # ap Artist.all
-
-	# def parse_artists
-	# 	all_songs.collect {|item| item.split(" - ")}
- # 	end
-
- # 	def parse_songs
- # 		all_songs.collect { |item| item.split(" - ")[1].split("[")[0][0..-2]}
-	# end
-
-	# def parse_genres
-	# 	all_songs.collect { |item| item.split(" [")[1][0..-6] }
-	# end
-
-	# def animate_artists
-	# 	parse_artists.each do |artist|
-	# 		artists = Artist.new
-	# 	end
-	# end
-
-
-
-	# animate_artists
- # # end
-
- # # mas = Parser.new
- # # ap mas.genres
 
 
 

@@ -11,6 +11,7 @@ class Artist
 	
 	def initialize
 		All << self
+		@songs = []
 	end
 
 	#take the instance object songs and call .length on it to determine
@@ -46,48 +47,4 @@ class Artist
 end
 
 
-
-# max = Artist.new
-# ap max.add_song("peaches")
-# ap Artist::ARTISTS.inspect
-# ap max.genre
-
-
-
-# pete = Artist.new
-# john = Artist.new
-# puts Artist.all
-
-#BIG TAKEAWAY.....
-#ARTISTS << self is doing a lot of work here
-# 1. it keeps track of artists as they are created
-# 2. it allows you to keep track of Artists as they are created
-
-# def self.all
-# 	ARTISTS.each do |artist|
-# 		artist
-# 	end
-# end
-
-# def self.all 
-# 	ARTISTS.collect {|artist| artist}
-# end
-
-# def genres
-# 	genres_array = []
-# 	song.each do |song|
-# 		genres_array << song.genre
-# 	end
-# 	genres_array
-# end
-
-#refactor as...
-
-# def genres
-# 		songs.collect {|song| song.genre }.uniq
-# end
-
-
-
-#each artist will have an instance var of genre and song
 

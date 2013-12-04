@@ -12,7 +12,7 @@ class Song
   #this is the explicit writer method
   def genre=(genre)
     @genre = genre
-    genre.songs << self
+    genre.genre_songs << self
   end
 
 end

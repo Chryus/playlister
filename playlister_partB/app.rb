@@ -10,24 +10,47 @@ require 'debugger'
 ######1. Tripping Billies - Uncool Jam Bands  
 ######2. What Would You Say - Bands Blake Liked in 1996  
 parser = Parser.new
+parser.make_objects
+
+def print_artists
+  Artist.all.each do |artist|
+    #if artist.songs_count < 2
+      puts artist.name
+    #else
+      #puts "#{artist.name} - #{artist.songs_count} songs"
+    #end
+  end
+  puts "There are #{Artist.count} artists in the catalog.\n"
+end
+
+def print_artist_songs
+  puts "\nSelect Artist.\n"
+  user_choice = gets.chomp.capitalize
+  num = 1
+  Artist.all.each do |artist|
+     if user_choice == artist.name
+      artist.songs.each do |song|
+        puts "#{artist.name} — #{artist.songs_count}(song)s"
+        puts "#{num}.#{song.name}"
+        num += 1
+      end
+     end
+    end
+  end
 
 def say_hello
   puts "Hello. Would you like to browse by artist or genre?"
-  gets.chomp.downcase
-end
-
-choice = say_hello  
-  if choice == "artist"
-    parser.print_artists
-    parser.print_artist_songs
-    #user select artist
-    #print out a list of songs and genres for that artist
+  answer = gets.chomp.downcase 
+  if answer == "artist"
+    print_artists
+    print_artist_songs
   elsif choice == "genre"
     genre_catalog = []
     #print list of all artists alphabetically with song count.
     catalog.each do |file|
       genre_catalog << file[2]
-    end
+  end
+
     #ap genre_catalog.uniq!
     puts "There are #{genre_catalog.count} genres."
     #print list of all genres sorted by the amount of songs
@@ -42,8 +65,10 @@ choice = say_hello
   else
     puts "Sorry I did not understand"
   end
- 
- 
+end
+
+say_hello
+ap Artist.all.inspect 
 # The Genre interface for the CLI should prompt the user with "Select Genre"
 # The genre index must list all the genres. This list must be sorted by the amount of songs.
 # In addition to the Genres name, the total song and artist count should be listed along side it.

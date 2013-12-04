@@ -4,13 +4,12 @@ require "./lib/artist"
 
 class Genre
 
-	attr_accessor :name, :artists, :songs
+	attr_accessor :name, :artists, :genre_songs
 
 	GENRES = []
 
 	def initialize
-		@artists = []
-		@songs = []
+		@genre_songs = []
 		GENRES << self
 	end
 
@@ -20,17 +19,17 @@ class Genre
 		GENRES.clear
 	end
 
-	def artists
-    songs.collect{|song| song.artist}.uniq
+	def collect_artists
+    genre_songs.collect{|song| song.artist}.uniq
   end
 
 	def self.all 
 		GENRES.collect {|genre| genre}
 	end
 
-	# def songs
- #    @songs ||= []
- #  end
+	def songs
+    @songs ||= []
+  end
 	
 end
 
